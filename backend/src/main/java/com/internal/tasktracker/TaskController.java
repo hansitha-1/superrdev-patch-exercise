@@ -27,9 +27,15 @@ public class TaskController {
         String searchTerm = "%" + query.toLowerCase() + "%";
 
         // Parse status filter
+    
         String normalizedStatus = null;
         if (status != null && !status.isEmpty()) {
-            normalizedStatus = TaskStatus.valueOf(status.toUpperCase()).name();
+            try {
+                normalizedStatus = TaskStatus.valueOf(status.toUpperCase()).name();
+            } catch (IllegalArgumentException e) {
+                return ResponseEntity.badRequest()
+                        .body(Map.of("error", "Invalid status: " + status));
+            }
         }
 
         // Query complexity estimation for logging
