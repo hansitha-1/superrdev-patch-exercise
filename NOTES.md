@@ -6,9 +6,10 @@ Summary of changes
 4. Invalid status now returns 400 instead of 500
 5. page and pageSize are validated (return 400 on invalid input)
 6. % and _ in a search query are escaped to match them literally
+7. Search and status changes now reset the page to 1 in App.jsx. Before, a stale page number showed "No tasks found" even when results existed
 
 What I decided not to change
-Pagination is implemented in memory in the controller (all matching tasks are fetched and then paged from this array). It is acceptable for this small table, but it would be better to change for big ones. Also, I did not add debounce to the search box. The cleanup flag prevents outdated requests from interfering with the results, but it would help more if the requests themselves were debounced.
+Pagination is done in memory in the controller (all matches are fetched, then paged). That is acceptable for this small table. I also did not add debounce to the search box, since the cleanup flag already stops stale results. Results are sorted newest first (created_at DESC). I treated that as intended behaviour.
 
 Biggest remaining risk
 The in-memory pagination will not scale for tables with large data sets. Another thing is that I could not test the Oracle package directly, as it runs only on the database server.The LIKE statement in the package does not have an ESCAPE clause, so it might not behave as expected.
