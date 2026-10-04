@@ -21,6 +21,15 @@ public class TaskController {
             @RequestParam(required = false) String status,
             @RequestParam(required = false, defaultValue = "1") int page,
             @RequestParam(required = false, defaultValue = "10") int pageSize) {
+                        // Validate pagination input
+        if (page < 1) {
+            return ResponseEntity.badRequest()
+                    .body(Map.of("error", "page must be 1 or greater"));
+        }
+        if (pageSize < 1 || pageSize > 100) {
+            return ResponseEntity.badRequest()
+                    .body(Map.of("error", "pageSize must be between 1 and 100"));
+        }
 
         // Normalize query input
         String query = q == null ? "" : q.trim();
